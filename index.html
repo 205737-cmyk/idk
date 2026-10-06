@@ -115,11 +115,17 @@
 
       <!-- Account Sign-In & Audio Controls -->
       <div class="flex items-center gap-3">
-        <!-- GIS Sign-In Trigger -->
-        <button onclick="openAuthModal()" id="gis-auth-badge" class="px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-teal-300 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-graduation-cap text-teal-400"></i>
-          <span id="auth-status-text">GIS Sign-In</span>
-        </button>
+        <!-- GIS Sign-In Trigger & User Controls -->
+        <div id="auth-header-wrapper" class="flex items-center gap-1.5">
+          <button onclick="openAuthModal()" id="gis-auth-badge" class="px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-teal-300 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-graduation-cap text-teal-400" id="auth-badge-icon"></i>
+            <span id="auth-status-text">GIS Sign-In</span>
+          </button>
+          <button onclick="handleSignOut()" id="header-signout-btn" class="hidden px-2.5 py-1.5 rounded-full bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-xs font-semibold text-rose-300 transition flex items-center gap-1" title="Sign Out">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span class="hidden sm:inline">Sign Out</span>
+          </button>
+        </div>
 
         <!-- WCAG Audio Control -->
         <div class="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800 text-xs">
@@ -626,11 +632,11 @@
     </button>
   </footer>
 
-  <!-- FLOATING COUNSELOR BUTTON -->
-  <button onclick="openAssistanceModal()" class="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold shadow-xl shadow-rose-600/30 transition hover:scale-105">
-    <i class="fa-solid fa-user-doctor text-lg"></i>
-    <span class="hidden sm:inline">Contact a Garden International School Counselor</span>
-    <span class="sm:hidden">Contact Counselor</span>
+  <!-- FLOATING COUNSELOR BUTTON (RESIZED & COMPACT) -->
+  <button onclick="openAssistanceModal()" class="fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3.5 py-2 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs shadow-lg shadow-rose-600/25 transition hover:scale-105">
+    <i class="fa-solid fa-user-doctor text-sm"></i>
+    <span class="hidden sm:inline">GIS Counselor Support</span>
+    <span class="sm:hidden">Counselor</span>
   </button>
 
   <!-- GIS ACCOUNT AUTH MODAL -->
@@ -638,34 +644,53 @@
     <div class="max-w-md w-full glass-card bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-5 relative shadow-2xl">
       <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
 
-      <div class="text-center space-y-2">
-        <div class="inline-flex p-3 rounded-2xl bg-teal-500/20 text-teal-400 border border-teal-500/30">
-          <i class="fa-solid fa-graduation-cap text-3xl"></i>
+      <!-- LOGGED OUT VIEW -->
+      <div id="auth-logged-out-view" class="space-y-5">
+        <div class="text-center space-y-2">
+          <div class="inline-flex p-3 rounded-2xl bg-teal-500/20 text-teal-400 border border-teal-500/30">
+            <i class="fa-solid fa-graduation-cap text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-slate-100">GIS Student Sign-In</h3>
+          <p class="text-xs text-slate-400">Restricted strictly to valid <span class="text-teal-300 font-mono">@gardenschool.edu.my</span> accounts.</p>
         </div>
-        <h3 class="text-xl font-bold text-slate-100">GIS Student Sign-In</h3>
-        <p class="text-xs text-slate-400">Restricted strictly to valid <span class="text-teal-300 font-mono">@gardenschool.edu.my</span> accounts.</p>
+
+        <!-- Live Option A: Google Supabase OAuth -->
+        <button onclick="triggerGoogleOAuth()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold text-xs rounded-xl border border-slate-700 transition flex items-center justify-center gap-2">
+          <i class="fa-brands fa-google text-teal-400"></i> Sign In with GIS Google Account
+        </button>
+
+        <div class="relative flex py-1 items-center">
+          <div class="flex-grow border-t border-slate-800"></div>
+          <span class="flex-shrink mx-3 text-[10px] text-slate-500 uppercase font-mono">Or Local Verification Test</span>
+          <div class="flex-grow border-t border-slate-800"></div>
+        </div>
+
+        <!-- Local Domain Verification Input -->
+        <div class="space-y-3">
+          <input type="email" id="gis-email-input" placeholder="student@gardenschool.edu.my" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-teal-400 font-mono">
+          <button onclick="verifyLocalGISEmail()" class="w-full py-2.5 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs rounded-xl transition">
+            Verify & Log In
+          </button>
+        </div>
+
+        <p id="auth-error-msg" class="text-xs text-rose-400 text-center hidden">Access Denied: Email must end with @gardenschool.edu.my</p>
       </div>
 
-      <!-- Live Option A: Google Supabase OAuth -->
-      <button onclick="triggerGoogleOAuth()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold text-xs rounded-xl border border-slate-700 transition flex items-center justify-center gap-2">
-        <i class="fa-brands fa-google text-teal-400"></i> Sign In with GIS Google Account
-      </button>
-
-      <div class="relative flex py-1 items-center">
-        <div class="flex-grow border-t border-slate-800"></div>
-        <span class="flex-shrink mx-3 text-[10px] text-slate-500 uppercase font-mono">Or Local Verification Test</span>
-        <div class="flex-grow border-t border-slate-800"></div>
-      </div>
-
-      <!-- Local Domain Verification Input -->
-      <div class="space-y-3">
-        <input type="email" id="gis-email-input" placeholder="student@gardenschool.edu.my" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-teal-400 font-mono">
-        <button onclick="verifyLocalGISEmail()" class="w-full py-2.5 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs rounded-xl transition">
-          Verify & Log In
+      <!-- LOGGED IN VIEW -->
+      <div id="auth-logged-in-view" class="space-y-5 hidden text-center">
+        <div class="inline-flex p-3 rounded-2xl bg-teal-500/20 text-teal-400 border border-teal-500/30">
+          <i class="fa-solid fa-user-check text-3xl"></i>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-slate-100">Signed In</h3>
+          <p class="text-xs text-slate-400 mt-1">Currently logged in as:</p>
+          <p id="logged-in-email-display" class="text-sm font-mono font-semibold text-teal-300 mt-1 break-all"></p>
+        </div>
+        <button onclick="handleSignOut()" class="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign Out of GIS Account
         </button>
       </div>
 
-      <p id="auth-error-msg" class="text-xs text-rose-400 text-center hidden">Access Denied: Email must end with @gardenschool.edu.my</p>
     </div>
   </div>
 
@@ -704,8 +729,8 @@
           <span>24/7 Youth Crisis Email</span>
         </div>
         <p class="text-xs text-slate-400">If you or a peer need immediate email support outside school hours, connect below.</p>
-        <a href="email:One of the child protection officers" class="block text-center w-full py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl transition">
-          Email the Child Protection Officers (I dont know who the child protection officers are)
+        <a href="mailto:childprotection@gardenschool.edu.my" class="block text-center w-full py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl transition">
+          Email Child Protection Officers
         </a>
       </div>
     </div>
@@ -759,7 +784,7 @@
     const SUPABASE_ANON_KEY = 'sb_publishable_41efXdsCspN5C-BWyciPZQ_Qiu1jwlc';
     let supabaseClient = null;
 
-    if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+    if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
       supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
 
@@ -772,13 +797,13 @@
 
     async function triggerGoogleOAuth() {
       if (!supabaseClient) {
-        alert("Supabase keys not configured. Use the Local Email Verification below for instant testing!");
+        alert("Supabase client is not initialized. Use the Local Email Verification below for instant testing!");
         return;
       }
       try {
         const { error } = await supabaseClient.auth.signInWithOAuth({
           provider: 'google',
-          options: { redirectTo: window.location.origin }
+          options: { redirectTo: window.location.origin + window.location.pathname }
         });
         if (error) throw error;
       } catch (err) {
@@ -800,20 +825,76 @@
       }
     }
 
+    async function handleSignOut() {
+      if (supabaseClient) {
+        try {
+          await supabaseClient.auth.signOut();
+        } catch (err) {
+          console.error("Supabase SignOut error:", err);
+        }
+      }
+      localStorage.removeItem('gis_user');
+      updateAuthUI(null);
+      closeAuthModal();
+    }
+
     function updateAuthUI(email) {
       const statusText = document.getElementById('auth-status-text');
       const badge = document.getElementById('gis-auth-badge');
+      const badgeIcon = document.getElementById('auth-badge-icon');
+      const signoutBtn = document.getElementById('header-signout-btn');
+      const loggedOutView = document.getElementById('auth-logged-out-view');
+      const loggedInView = document.getElementById('auth-logged-in-view');
+      const emailDisplay = document.getElementById('logged-in-email-display');
+
       if (email) {
         const username = email.split('@')[0];
         statusText.textContent = username;
-        badge.className = "px-3 py-1.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/40 text-xs font-semibold flex items-center gap-1.5";
+        badge.className = "px-3 py-1.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/40 text-xs font-semibold flex items-center gap-1.5 cursor-pointer hover:bg-teal-500/30 transition";
+        if (badgeIcon) badgeIcon.className = "fa-solid fa-user-check text-teal-400";
+        if (signoutBtn) signoutBtn.classList.remove('hidden');
+
+        if (loggedOutView) loggedOutView.classList.add('hidden');
+        if (loggedInView) loggedInView.classList.remove('hidden');
+        if (emailDisplay) emailDisplay.textContent = email;
+      } else {
+        statusText.textContent = "GIS Sign-In";
+        badge.className = "px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-teal-300 transition flex items-center gap-1.5 cursor-pointer";
+        if (badgeIcon) badgeIcon.className = "fa-solid fa-graduation-cap text-teal-400";
+        if (signoutBtn) signoutBtn.classList.add('hidden');
+
+        if (loggedOutView) loggedOutView.classList.remove('hidden');
+        if (loggedInView) loggedInView.classList.add('hidden');
+        if (emailDisplay) emailDisplay.textContent = '';
       }
     }
 
-    // Check saved session on load
-    window.addEventListener('DOMContentLoaded', () => {
+    // Check saved session on load & handle OAuth redirects
+    window.addEventListener('DOMContentLoaded', async () => {
       const savedUser = localStorage.getItem('gis_user');
-      if (savedUser) updateAuthUI(savedUser);
+      if (savedUser) {
+        updateAuthUI(savedUser);
+      } else if (supabaseClient) {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session && session.user && session.user.email) {
+          const email = session.user.email;
+          localStorage.setItem('gis_user', email);
+          updateAuthUI(email);
+        }
+      }
+
+      if (supabaseClient) {
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+          if (session && session.user && session.user.email) {
+            const email = session.user.email;
+            localStorage.setItem('gis_user', email);
+            updateAuthUI(email);
+          } else if (event === 'SIGNED_OUT') {
+            localStorage.removeItem('gis_user');
+            updateAuthUI(null);
+          }
+        });
+      }
     });
 
     // Tab / View Switcher Logic
