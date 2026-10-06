@@ -1,0 +1,24 @@
+{
+  "name": "mindscape-wellbeing-hub",
+  "version": "1.0.0",
+  "description": "Garden International School Well-being Hub",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server -p 3000",
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/205737-cmyk/idk.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/205737-cmyk/idk/issues"
+  },
+  "homepage": "https://github.com/205737-cmyk/idk#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
